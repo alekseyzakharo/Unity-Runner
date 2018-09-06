@@ -604,11 +604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 510b956133fba8c44b5b1414219480f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstPressPos: 0
-  delta: 0
-  destination: {x: 0, y: 0, z: 0}
-  lerpSpeed: 5
-  moveDist: 2
+  moveDist: 5
 --- !u!65 &1361448966
 BoxCollider:
   m_ObjectHideFlags: 0

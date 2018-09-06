@@ -3,26 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class Player : MonoBehaviour {
 
-    const float THRESHOLD = 5.0f;
-    const float PLAYERBOUNDARY = 8.0f;
+    public float moveDist = 5.0f;
+
+    private const float THRESHOLD = 0.10f; //percentage representation of screen swipe distance
+    private const float PLAYERBOUNDARY = 8.0f;
     
-    public float firstPressPos;
-    public float delta;
+    private float firstPressPos;
+    private float delta;
 
-    public Vector3 destination;
-    public float lerpSpeed = 10.0f;
+    private Vector3 destination;
+    private float lerpSpeed = 10.0f;
 
-    public float moveDist = 2.0f;
+    private float screenWidth;
+    private float swipeStrength;
 
     float x, y, z;
 
     // Use this for initialization
     void Start ()
     {
-        
+        Screen.orientation = ScreenOrientation.Portrait;
+        screenWidth = Screen.width;
     }
 	
 	// Update is called once per frame
@@ -39,7 +44,9 @@ public class Player : MonoBehaviour {
         {
             delta = firstPressPos - Input.mousePosition.x;
 
-            if(System.Math.Abs(delta) > THRESHOLD)
+            swipeStrength = delta / screenWidth;
+
+            if (Math.Abs(swipeStrength) > THRESHOLD)
             {
                 if (transform.position.x < PLAYERBOUNDARY && transform.position.x > -PLAYERBOUNDARY)
                 {
@@ -47,7 +54,7 @@ public class Player : MonoBehaviour {
                     z = transform.position.z;
                     if (delta > 0)
                     {
-                        x = destination.x + moveDist;
+                        x = destination.x + (moveDist * swipeStrength);
                         if (x > PLAYERBOUNDARY)
                             x = PLAYERBOUNDARY;
                         //destination = new Vector3(x, y, z);
@@ -62,6 +69,7 @@ public class Player : MonoBehaviour {
                         //Debug.Log("left" + destination.ToString() + " " + transform.position.ToString());
                     }
                     destination = new Vector3(x, y, z);
+                    Debug.Log("moved" + destination.ToString() + " " + transform.position.ToString());
                 }
             }
         }
