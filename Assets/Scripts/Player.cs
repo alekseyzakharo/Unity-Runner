@@ -6,25 +6,31 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
-    public float thrust = 5.0f;
     const float THRESHOLD = 5.0f;
     const float PLAYERBOUNDARY = 8.0f;
     
     public float firstPressPos;
     public float delta;
 
-    public Rigidbody rb;
+    public Vector3 destination;
+    public float lerpSpeed = 10.0f;
+
+    public float moveDist = 2.0f;
+
+    float x, y, z;
 
     // Use this for initialization
     void Start ()
     {
-        rb = GetComponent<Rigidbody>();
+        
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if(Input.GetMouseButtonDown(0))
+        transform.position = Vector3.Lerp(transform.position, destination, lerpSpeed * Time.deltaTime);
+
+        if (Input.GetMouseButtonDown(0))
         {
             firstPressPos = Input.mousePosition.x;
         }
@@ -37,26 +43,30 @@ public class Player : MonoBehaviour {
             {
                 if (transform.position.x < PLAYERBOUNDARY && transform.position.x > -PLAYERBOUNDARY)
                 {
-                    //if (delta > 0)
-                    //    transform.Translate(transform.position.x + 1, 0, 0);
-                    //else
-                    //    transform.Translate(transform.position.x - 1, 0, 0);
+                    y = transform.position.y;
+                    z = transform.position.z;
                     if (delta > 0)
                     {
-                        rb.AddForce(transform.right * thrust);
-                        Debug.Log("force right");
+                        x = destination.x + moveDist;
+                        if (x > PLAYERBOUNDARY)
+                            x = PLAYERBOUNDARY;
+                        //destination = new Vector3(x, y, z);
+                        //Debug.Log("right" + destination.ToString() + " " + transform.position.ToString());
                     }
                     else
                     {
-                        rb.AddForce(-transform.right * thrust);
-                        Debug.Log("force left");
+                        x = destination.x - moveDist;
+                        if (x < -PLAYERBOUNDARY)
+                            x = -PLAYERBOUNDARY;
+                        //destination = new Vector3(destination.x - moveDist, y, z);
+                        //Debug.Log("left" + destination.ToString() + " " + transform.position.ToString());
                     }
+                    destination = new Vector3(x, y, z);
                 }
             }
         }
     }
 
-    
     void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Obstacle")
@@ -66,8 +76,7 @@ public class Player : MonoBehaviour {
             ModeSelect();
         }
     }
-
-    
+ 
     public void ModeSelect()
     {
         StartCoroutine(LoadAfterDelay("Start"));
@@ -78,5 +87,7 @@ public class Player : MonoBehaviour {
         yield return new WaitForSeconds(03); // wait 1 seconds
         SceneManager.LoadScene(levelName);
     }
+
+    
 
 }
