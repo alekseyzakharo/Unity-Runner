@@ -6,32 +6,54 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
-    static Animator anim;
+    public float thrust = 5.0f;
+    const float THRESHOLD = 5.0f;
+    const float PLAYERBOUNDARY = 8.0f;
+    
+    public float firstPressPos;
+    public float delta;
 
-    public float speed = 5.0f;
-    public float rotSpeed = 75.0f;
-
-    public Vector2 firstPressPos;
-    public Vector2 secondPressPos;
-    public Vector2 currentSwipe;
+    public Rigidbody rb;
 
     // Use this for initialization
     void Start ()
     {
-        anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-       
+        if(Input.GetMouseButtonDown(0))
+        {
+            firstPressPos = Input.mousePosition.x;
+        }
+        
+        if(Input.GetMouseButtonUp(0))
+        {
+            delta = firstPressPos - Input.mousePosition.x;
 
-        float translation = Input.GetAxis("Horizontal") * speed;
-
-        translation *= Time.deltaTime;
-
-        transform.Translate(translation,0 , 0);
-   
+            if(System.Math.Abs(delta) > THRESHOLD)
+            {
+                if (transform.position.x < PLAYERBOUNDARY && transform.position.x > -PLAYERBOUNDARY)
+                {
+                    //if (delta > 0)
+                    //    transform.Translate(transform.position.x + 1, 0, 0);
+                    //else
+                    //    transform.Translate(transform.position.x - 1, 0, 0);
+                    if (delta > 0)
+                    {
+                        rb.AddForce(transform.right * thrust);
+                        Debug.Log("force right");
+                    }
+                    else
+                    {
+                        rb.AddForce(-transform.right * thrust);
+                        Debug.Log("force left");
+                    }
+                }
+            }
+        }
     }
 
     
@@ -45,41 +67,7 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void swipe()
-    {
-        if (Input.touches.Length > 0)
-        {
-            Touch t = Input.GetTouch(0);
-            if (t.phase == TouchPhase.Began)
-            {
-                //save began touch 2d point
-                firstPressPos = new Vector2(t.position.x, t.position.y);
-            }
-            if (t.phase == TouchPhase.Ended)
-            {
-                //save ended touch 2d point
-                secondPressPos = new Vector2(t.position.x, t.position.y);
-
-                //create vector from the two points
-                currentSwipe = new Vector3(secondPressPos.x - firstPressPos.x, secondPressPos.y - firstPressPos.y);
-
-                //normalize the 2d vector
-                currentSwipe.Normalize();
-
-                //swipe left
-                if (currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
-                {
-                    transform.Translate(transform.position.x + 5.0f, 0, 0);
-                }
-                //swipe right
-                if (currentSwipe.x > 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
-                {
-                    transform.Translate(transform.position.x - 5.0f, 0, 0);
-                }
-            }
-        }
-    }
-
+    
     public void ModeSelect()
     {
         StartCoroutine(LoadAfterDelay("Start"));
