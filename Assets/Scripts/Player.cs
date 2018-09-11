@@ -79,13 +79,20 @@ public class Player : MonoBehaviour {
     {
         if(collision.gameObject.tag == "Obstacle")
         {
-            Text gameover = GameObject.Find("GameOver").GetComponent<Text>();
-            gameover.enabled = true;
-            ModeSelect();
+            //set speed = 0, running animation = idle
+            transform.Find("Main Camera").gameObject.SendMessage("setSpeed", 0f);
+            GetComponent<Animator>().SetBool("IsRunning", false);
+
+            Text splashtext = GameObject.Find("SplashText").GetComponent<Text>();
+            splashtext.text = "Game\nOver";
+            splashtext.enabled = true;
+
+            //go back to main menu
+            StartMenu();
         }
     }
  
-    public void ModeSelect()
+    public void StartMenu()
     {
         StartCoroutine(LoadAfterDelay("Start"));
     }

@@ -6,11 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class Obstacle : MonoBehaviour
 {
-    GameObject player;
     // Use this for initialization
     void Start()
     {
-        player = GameObject.Find("malcolm");
     }
 
     // Update is called once per frame

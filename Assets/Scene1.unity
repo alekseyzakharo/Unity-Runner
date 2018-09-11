@@ -405,6 +405,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreText: {fileID: 0}
   speedText: {fileID: 0}
+  splashtext: {fileID: 0}
   path: {fileID: 0}
   obstacles: {fileID: 0}
 --- !u!1 &327979041
@@ -418,7 +419,7 @@ GameObject:
   - component: {fileID: 327979044}
   - component: {fileID: 327979043}
   m_Layer: 5
-  m_Name: GameOver
+  m_Name: SplashText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -474,9 +475,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Game
-
-    Over'
+  m_Text: 
 --- !u!222 &327979044
 CanvasRenderer:
   m_ObjectHideFlags: 0
